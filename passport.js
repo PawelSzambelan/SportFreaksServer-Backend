@@ -12,7 +12,7 @@ passport.use(new JwtStrategy({
 }, async (payload, done) => {
     try {
         // find the user specified in token
-        const user = await User.findById(payload, sub);
+        const user = await User.findById(payload.sub);
 
         // if user doesn't exist, handle it
         if (!user) {

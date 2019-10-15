@@ -4,7 +4,7 @@ const router = require('express-promise-router')();
 
 //passport for secret route
 const passport = require('passport');
-require('../passport');
+const passportConf = require('../passport');
 
 
 const passportSignIn = passport.authenticate('local',{session: false});
@@ -36,6 +36,5 @@ router.route('/signin')
 
 router.route('/secret')
     .get(passportJWT, UsersController.secret);
-
 
 module.exports = router;

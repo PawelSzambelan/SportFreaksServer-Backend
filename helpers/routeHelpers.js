@@ -40,7 +40,8 @@ module.exports = {
             surname: Joi.string().required(),
             email: Joi.string().min(5).max(255).required().email(),
             password: Joi.string().min(5).max(1024).required(),
-            phone: Joi.number().required()
+            phone: Joi.number().required(),
+            rule: Joi.string().required()
         }),
 
         userOptionalSchema: Joi.object().keys({
@@ -111,7 +112,7 @@ module.exports = {
         }),
 
         authSchema: Joi.object().keys({
-            email: Joi.string().required().email(),
+            email: Joi.string().email().required(),
             password: Joi.string().required()
         }),
 

@@ -8,7 +8,8 @@ signToken = user => {
         iss: 'SportFreaks',
         sub: user.id,
         iat: new Date().getTime(), // current time
-        exp: new Date().setDate(new Date().getDate() + 1) // current time + 1 day ahead
+        // exp: new Date().setDate(new Date().getDate() + 1) // current time + 1 day ahead
+        exp: Math.floor(Date.now() / 1000) + (60 * 60) // expiration token for 1 hour
     }, JWT_SECRET);
 };
 
@@ -71,7 +72,7 @@ module.exports = {
     },
 
     signUp: async (req, res, next) => {
-        const {name, surname, email, password, phone} = req.value.body;
+        const {name, surname, email, password, phone, rule} = req.value.body;
         console.log(req.value.body);
 
         //Check if there is a user with the same email
@@ -81,7 +82,7 @@ module.exports = {
         }
 
         // Create a new user
-        const newUser = new User({name, surname, email, password, phone});
+        const newUser = new User({name, surname, email, password, phone, rule});
         // const salt = await bcrypt.genSalt(10);
         // newUser.password = await bcrypt.hash(newUser.password, salt);
         await newUser.save();
@@ -97,11 +98,15 @@ module.exports = {
         console.log('I managed to get /signIn route');
         // generate token
         const token = signToken(req.user);
-        res.status(200).json({token});
+        const userRule = req.user.rule;
+        console.log(req.user.rule);
+        // res.status(200).json(req.user.rule + {token});
+        res.status(200).json({token, userRule});
     },
 
     secret: async (req, res, next) => {
         console.log('I managed to get /secret route');
+        res.json({secret: "resource"});
     },
 
 
