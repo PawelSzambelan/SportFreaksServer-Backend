@@ -50,5 +50,5 @@ const lessonSchema = new Schema({
 });
 
 //table in Mongoose is a model
-const Lesson = mongoose.model('lessons', lessonSchema);
+const Lesson = mongoose.model('lesson', lessonSchema);
 module.exports = Lesson;

@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const Lesson = require('../models/lesson');
+const Rule = require('../models/rule');
 const JWT = require('jsonwebtoken');
 const {JWT_SECRET} = require('../config/index');
 
@@ -98,10 +99,12 @@ module.exports = {
         console.log('I managed to get /signIn route');
         // generate token
         const token = signToken(req.user);
-        const userRule = req.user.rule;
-        console.log(req.user.rule);
+        const userRule = await Rule.findById(req.user.rule);
+        console.log('userRule id', req.user.rule);
+        console.log('user rule name', userRule.name);
+        const userRuleName = userRule.name;
         // res.status(200).json(req.user.rule + {token});
-        res.status(200).json({token, userRule});
+        res.status(200).json({token, userRuleName});
     },
 
     secret: async (req, res, next) => {

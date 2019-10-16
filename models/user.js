@@ -25,17 +25,17 @@ const userSchema = new Schema({
             type: Number,
             // required: true
         },
-        // rule: {
-        //     type: Schema.Types.
-        //     ref: 'rules',
-        //     required: true
-        // },
         rule: {
-            type: String,
+            type: Schema.Types.ObjectId,
+            ref: 'rule',
+            // required: true
         },
+        // rule: {
+        //     type: String,
+        // },
         lessons: [{
             type: Schema.Types.ObjectId,
-            ref: 'lessons'
+            ref: 'lesson'
         }],
 // created_at: Date
     })

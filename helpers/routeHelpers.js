@@ -3,8 +3,8 @@ const Joi = require('joi');
 module.exports = {
     validateParam: (schema, name) => {
         return (req, res, next) => {
-            const result = Joi.validate({ param: req['params'][name]}, schema);
-            if(result.error){
+            const result = Joi.validate({param: req['params'][name]}, schema);
+            if (result.error) {
                 return res.status(400).json(result.error);
             } else {
                 if (!req.value)
@@ -19,7 +19,7 @@ module.exports = {
 
     validateBody: (schema) => {
         return (req, res, next) => {
-            const result = Joi.validate( req.body, schema);
+            const result = Joi.validate(req.body, schema);
             if (result.error) {
                 return res.status(400).json(result.error);
             } else {
@@ -41,7 +41,8 @@ module.exports = {
             email: Joi.string().min(5).max(255).required().email(),
             password: Joi.string().min(5).max(1024).required(),
             phone: Joi.number().required(),
-            rule: Joi.string().required()
+            // rule: Joi.string().required()
+            rule: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required()
         }),
 
         userOptionalSchema: Joi.object().keys({
