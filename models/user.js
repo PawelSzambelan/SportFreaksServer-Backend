@@ -48,27 +48,29 @@ const userSchema = new Schema({
 //     next();
 // });
 
-userSchema.pre('save', async function (next) {
-    try {
-        //generale a salt
-        const salt = await bcrypt.genSalt(10);
-        // generate a password hash ( salt + hash)
-        const passwordHash = await bcrypt.hash(this.password, salt);
-        // Re-assign hashed version over oryginal, plain text password
-        this.password = passwordHash;
-        next();
-    } catch (error) {
-        next(error);
-    }
-});
 
-userSchema.methods.isValidPassword = async function (newPassword) {
-    try {
-        return await bcrypt.compare(newPassword, this.password);
-    } catch (error) {
-        throw new Error(error);
-    }
-};
+
+// userSchema.pre('save', async function (next) {
+//     try {
+//         //generale a salt
+//         const salt = await bcrypt.genSalt(10);
+//         // generate a password hash ( salt + hash)
+//         const passwordHash = await bcrypt.hash(this.password, salt);
+//         // Re-assign hashed version over oryginal, plain text password
+//         this.password = passwordHash;
+//         next();
+//     } catch (error) {
+//         next(error);
+//     }
+// });
+//
+// userSchema.methods.isValidPassword = async function (newPassword) {
+//     try {
+//         return await bcrypt.compare(newPassword, this.password);
+//     } catch (error) {
+//         throw new Error(error);
+//     }
+// };
 
 //table in Mongoose is
 const User = mongoose.model('user', userSchema);

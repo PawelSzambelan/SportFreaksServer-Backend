@@ -1,4 +1,7 @@
-const Joi = require('joi');
+const Joi = require('joi')
+// const Joi = require('@hapi/joi')
+//     .extend(require('@hapi/joi-date'));
+
 
 module.exports = {
     validateParam: (schema, name) => {
@@ -65,9 +68,8 @@ module.exports = {
             price: Joi.number().required(),
             customerQuantity: Joi.number().required(),
             customerAge: Joi.string().required(),
-            date: Joi.date().required(),
-            timeFrom: Joi.number().required(),
-            timeTo: Joi.number().required()
+            date: Joi.string().required(),
+            hour: Joi.number().required()
         }),
 
         lessonSchema: Joi.object().keys({
@@ -79,8 +81,7 @@ module.exports = {
             customerQuantity: Joi.number().required(),
             customerAge: Joi.string().required(),
             date: Joi.date().required(),
-            timeFrom: Joi.number().required(),
-            timeTo: Joi.number().required(),
+            hour: Joi.number().required(),
             instructor: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required()
         }),
 
@@ -93,8 +94,7 @@ module.exports = {
             customerQuantity: Joi.number().required(),
             customerAge: Joi.string().required(),
             date: Joi.date().required(),
-            timeFrom: Joi.number().required(),
-            timeTo: Joi.number().required(),
+            hour: Joi.number().required(),
             instructor: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required()
         }),
 
@@ -107,8 +107,7 @@ module.exports = {
             customerQuantity: Joi.number(),
             customerAge: Joi.string(),
             date: Joi.date(),
-            timeFrom: Joi.number(),
-            timeTo: Joi.number(),
+            hour: Joi.number(),
             instructor: Joi.string().regex(/^[0-9a-fA-F]{24}$/)
         }),
 

@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const lessonSchema = new Schema({
+    // customer: {
+    //     type: Schema.Types.ObjectId,
+    //     ref: 'customer'
+    // },
     customerName: {
         type: String,
         // required: true
@@ -31,16 +35,12 @@ const lessonSchema = new Schema({
         // required: true
     },
     date: {
-        type: Date,
+        type: String,
         // required:true
     },
-    timeFrom: {
+    hour: {
         type: Number,
         // required: true
-    },
-    timeTo: {
-        type: Number,
-        // required:true
     },
     instructor: {
         type: Schema.Types.ObjectId,
