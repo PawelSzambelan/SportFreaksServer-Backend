@@ -9,6 +9,31 @@ module.exports = {
         res.status(200).json(lessons);
     },
 
+    //getting all lessons the exact day - needed for graphic
+    getLessonsExactDay: async (req, res, next) => {
+        const lessons = await Lesson.find({});
+
+        const date = req.path.substr(1);
+        console.log('date from req.path: ', date);
+
+        const filteredLessonsByDate = lessons.filter(function (lessons){
+            // console.log('date from req.path: ', date);
+            // console.log('date from req.path: ', lessons.date);
+            // console.log(date == lessons.date);
+            return lessons.date == date;
+        });
+        // console.log('filteredLessonsByDate: ', filteredLessonsByDate);
+        // res.status(200).json(userLessons.lessons);
+        res.status(200).json(filteredLessonsByDate);
+
+        // res.status(200).json(lessons);
+    },
+
+
+
+
+
+
     newLesson: async (req, res, next) => {
         console.log('req.value', req.value);
 
@@ -37,27 +62,27 @@ module.exports = {
     },
 
     replaceLesson: async (req, res, next) => {
-        const { lessonId } = req.value.params;
+        const {lessonId} = req.value.params;
         const newLesson = req.value.body;
         const result = await Lesson.findByIdAndUpdate(lessonId, newLesson);
-        res.status(200).json({ success: true });
+        res.status(200).json({success: true});
     },
 
     updateLesson: async (req, res, next) => {
-        const { lessonId } = req.value.params;
+        const {lessonId} = req.value.params;
         const newLesson = req.value.body;
         const result = await Lesson.findByIdAndUpdate(lessonId, newLesson);
-        res.status(200).json({ success: true });
+        res.status(200).json({success: true});
     },
 
     deleteLesson: async (req, res, next) => {
-        const { lessonId } = req.value.params;
+        const {lessonId} = req.value.params;
 
         //get lesson
         const lesson = await Lesson.findById(lessonId);
 
-        if(!lesson){
-            return res.status(404).json({ error: 'Car doesn\'t exist'});
+        if (!lesson) {
+            return res.status(404).json({error: 'Lesson doesn\'t exist'});
         }
         const instructorId = lesson.instructor;
 
@@ -71,7 +96,8 @@ module.exports = {
         instructor.lessons.pull(lesson);
         await instructor.save();
 
-        res.status(200).json({ success: true });
+        res.status(200).json({success: true});
     },
 
+    
 };

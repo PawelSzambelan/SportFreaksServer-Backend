@@ -119,16 +119,13 @@ module.exports = {
     // },
 
 
-
-
-
     signUp: async (req, res, next) => {
         const {name, surname, email, password, phone, rule} = req.value.body;
         console.log(req.value.body);
         //Check if there is a user with the same email
-        const foundUser = await User.findOne({ email });
+        const foundUser = await User.findOne({email});
         if (foundUser) {
-            return res.status(403).json({ error: 'Email is already in use' });
+            return res.status(403).json({error: 'Email is already in use'});
         }
 
         // Create a new user
@@ -137,11 +134,11 @@ module.exports = {
         newUser.password = await bcrypt.hash(newUser.password, salt);
         await newUser.save();
 
-        res.status(200).json({ newUser });
+        res.status(200).json({newUser});
     },
 
     signIn: async (req, res, next) => {
-        let user = await User.findOne({ email: req.body.email });
+        let user = await User.findOne({email: req.body.email});
         if (!user) return res.status(400).send('Invalid email.');
         const validPassword = await bcrypt.compare(req.body.password, user.password);
         if (!validPassword) return res.status(400).send('Invalid password.');
@@ -164,12 +161,12 @@ module.exports = {
     getUserLessons: async (req, res, next) => {
         const id = req.header('auth-token');
         // console.log('req.path: ', req.path);
-        const date = req.path.substring(13,23);
+        const date = req.path.substring(13);
         // console.log('date from req.path: ', date);
         const userLessons = await User.findById(id).populate('lessons');
         // console.log('user all lessons', userLessons.lessons);
 
-        const filteredLessonsByDate = userLessons.lessons.filter(function (lessons){
+        const filteredLessonsByDate = userLessons.lessons.filter(function (lessons) {
             // console.log('date from req.path: ', date);
             // console.log('date from req.path: ', lessons.date);
             // console.log(date == lessons.date);
@@ -178,6 +175,24 @@ module.exports = {
         // console.log('filteredLessonsByDate: ', filteredLessonsByDate);
         // res.status(200).json(userLessons.lessons);
         res.status(200).json(filteredLessonsByDate);
+    },
+
+    getInstructors: async (req, res, next) => {
+        const allUsers = await User.find({});
+        // console.log('allUsers:', allUsers);
+        const rules = await Rule.find({});
+        const instructorRule = rules.find(function (instructor) {
+            return instructor.name === 'instructor';
+        });
+        // console.log('instrcutorRule:', instructorRule);
+
+        const instructors = allUsers.filter(function (user) {
+            // console.log('instructor._id' ,instructorRule.id);
+            // console.log('rule' ,user.rule);
+            return user.rule == instructorRule.id;
+        });
+        console.log('instructors only: ', instructors);
+        res.status(200).json(instructors);
     },
 
 

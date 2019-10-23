@@ -42,6 +42,8 @@ router.route('/:userId/lessons')
 // router.route('/secret')
 //     .get(passportJWT, UsersController.secret);
 
+
+
 router.route('/signup')
     .post(validateBody(schemas.userSchema), UsersController.signUp);
 
@@ -54,5 +56,8 @@ router.route('/signin')
 
 router.route('/userLessons/:date')
     .get(UsersController.getUserLessons);
+
+router.route('/instructors')
+    .get(UsersController.getInstructors);
 
 module.exports = router;
