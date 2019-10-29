@@ -18,9 +18,6 @@ router.route('/')
     .get(UsersController.index);
     // .post(validateBody(schemas.userSchema), UsersController.newUser);
 
-router.route('/user')
-    .get(UsersController.getUser);
-
 // router.route('/:userId')
 //     .get(validateParam(schemas.idSchema, 'userId'), UsersController.getUser)
 //     .put([validateParam(schemas.idSchema, 'userId'), validateBody(schemas.userSchema)], UsersController.replaceUser)
@@ -44,6 +41,9 @@ router.route('/:userId/lessons')
 
 
 
+
+//z tych niżej korzystam
+
 router.route('/signup')
     .post(validateBody(schemas.userSchema), UsersController.signUp);
 
@@ -59,5 +59,17 @@ router.route('/userLessons/:date')
 
 router.route('/instructors')
     .get(UsersController.getInstructors);
+
+router.route('/receptionists')
+    .get(UsersController.getReceptionists);
+
+router.route('/admins')
+    .get(UsersController.getAdmins);
+
+router.route('/rules')
+    .get(UsersController.getRules);
+
+router.route('/user')
+    .get(UsersController.getLoggedInUser);
 
 module.exports = router;

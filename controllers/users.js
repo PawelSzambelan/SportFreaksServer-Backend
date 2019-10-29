@@ -33,12 +33,6 @@ module.exports = {
     //     res.status(200).json(user);
     // },
 
-    getUser: async (req, res, next) => {
-        const id = req.header('auth-token');
-        const user = await User.findById(id);
-        res.status(200).json(user);
-    },
-
     replaceUser: async (req, res, next) => {
         // enforce that req.body must contain all the fields
         const {userId} = req.value.params;
@@ -119,6 +113,8 @@ module.exports = {
     // },
 
 
+
+    // z tych niżej korzystam
     signUp: async (req, res, next) => {
         const {name, surname, email, password, phone, rule} = req.value.body;
         console.log(req.value.body);
@@ -158,6 +154,16 @@ module.exports = {
         res.status(200).json({token, userRuleName});
     },
 
+    getLoggedInUser: async (req, res, next) => {
+        const id = req.header('auth-token');
+        const user = await User.findById(id);
+
+        const userRule = await Rule.findById(user.rule);
+        const userRuleName = userRule.name;
+
+        res.status(200).json({user, userRuleName});
+    },
+
     getUserLessons: async (req, res, next) => {
         const id = req.header('auth-token');
         // console.log('req.path: ', req.path);
@@ -179,21 +185,49 @@ module.exports = {
 
     getInstructors: async (req, res, next) => {
         const allUsers = await User.find({});
-        // console.log('allUsers:', allUsers);
-        const rules = await Rule.find({});
-        const instructorRule = rules.find(function (instructor) {
-            return instructor.name === 'instructor';
-        });
-        // console.log('instrcutorRule:', instructorRule);
+
+        // const rules = await Rule.find({});
+        // const instructorRule = rules.find(function (instructor) {
+        //     return instructor.name === 'instructor';
+        // });
 
         const instructors = allUsers.filter(function (user) {
-            // console.log('instructor._id' ,instructorRule.id);
-            // console.log('rule' ,user.rule);
-            return user.rule == instructorRule.id;
+            // return user.rule == instructorRule.id;
+            return user.rule == '5da733b3c3a29f3440edb8b9';
         });
-        console.log('instructors only: ', instructors);
+        // console.log('instructors only: ', instructors);
         res.status(200).json(instructors);
     },
 
+    getReceptionists: async (req, res, next) => {
+        const allUsers = await User.find({});
+        const rules = await Rule.find({});
+        const receptionistRule = rules.find(function (receptionist) {
+            return receptionist.name === 'Biuro';
+        });
+        const receptionists = allUsers.filter(function (user) {
+            return user.rule == receptionistRule.id;
+            // return user.rule == '5da73348c3a29f3440edb8b7';
+        });
+        res.status(200).json(receptionists);
+    },
+
+    getAdmins: async (req, res, next) => {
+        const allUsers = await User.find({});
+        const rules = await Rule.find({});
+        const adminRule = rules.find(function (admin) {
+            return admin.name === 'Administrator';
+        });
+        const admins = allUsers.filter(function (user) {
+            return user.rule == adminRule.id;
+            // return user.rule == '5da73338c3a29f3440edb8b6';
+        });
+        res.status(200).json(admins);
+    },
+
+    getRules: async (req, res, next) => {
+        const rules = await Rule.find({});
+        res.status(200).json(rules);
+    },
 
 };
