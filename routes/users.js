@@ -1,15 +1,5 @@
 const express = require('express');
-// const router = express.Router();
 const router = require('express-promise-router')();
-
-//passport for secret route
-const passport = require('passport');
-const passportConf = require('../passport');
-
-
-const passportSignIn = passport.authenticate('local',{session: false});
-const passportJWT = passport.authenticate('jwt',{session: false});
-
 
 const UsersController = require('../controllers/users');
 const {validateParam, validateBody, schemas} = require('../helpers/routeHelpers.js');
@@ -30,16 +20,6 @@ router.route('/:userId/lessons')
     .get(validateParam(schemas.idSchema, 'userId'), UsersController.getUserLessons)
     .post([validateParam(schemas.idSchema, 'userId'), validateBody(schemas.userLessonSchema)], UsersController.newUserLesson);
 
-// router.route('/signup')
-//     .post(validateBody(schemas.userSchema), UsersController.signUp);
-//
-// router.route('/signin')
-//     .post(validateBody(schemas.authSchema), passportSignIn, UsersController.signIn);
-//
-// router.route('/secret')
-//     .get(passportJWT, UsersController.secret);
-
-
 
 
 //z tych niżej korzystam
@@ -49,6 +29,9 @@ router.route('/signup')
 
 router.route('/signin')
     .post(validateBody(schemas.authSchema), UsersController.signIn);
+
+router.route('/updateUser/:userId')
+    .put([validateParam(schemas.idSchema, 'userId'), validateBody(schemas.userOptionalSchema)], UsersController.updateUser);
 
 //to mi zwracało wszystkie lekcje danego instruktora a niżej chciałem zrobić, żeby z danego dnia ;)
 // router.route('/userLessons/')

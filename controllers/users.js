@@ -41,13 +41,7 @@ module.exports = {
         res.status(200).json({success: true});
     },
 
-    updateUser: async (req, res, next) => {
-        // req.body may contain any number of fields
-        const {userId} = req.value.params;
-        const newUser = req.value.body;
-        const result = await User.findByIdAndUpdate(userId, newUser);
-        res.status(200).json({success: true});
-    },
+
 
     // getUserLessons: async (req, res, next) => {
     //     const {userId} = req.value.params;
@@ -138,20 +132,22 @@ module.exports = {
         if (!user) return res.status(400).send('Invalid email.');
         const validPassword = await bcrypt.compare(req.body.password, user.password);
         if (!validPassword) return res.status(400).send('Invalid password.');
-        // Generate token
-        //const token = signToken(user);
-        //res.header('auth-token', token).send(user);
 
         const userRule = await Rule.findById(user.rule);
         console.log('userRule id', user.rule);
         console.log('user rule name', userRule.name);
         const userRuleName = userRule.name;
-
-
         const token = user._id;
-        // res.status(200).json({token});
-
         res.status(200).json({token, userRuleName});
+    },
+
+    updateUser: async (req, res, next) => {
+        const {userId} = req.value.params;
+        const newUser = req.value.body;
+        const salt = await bcrypt.genSalt(10);
+        newUser.password = await bcrypt.hash(newUser.password, salt);
+        await User.findByIdAndUpdate(userId, newUser);
+        res.status(200).json({success: true});
     },
 
     getLoggedInUser: async (req, res, next) => {

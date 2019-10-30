@@ -1,4 +1,4 @@
-const Joi = require('joi')
+const Joi = require('joi');
 // const Joi = require('@hapi/joi')
 //     .extend(require('@hapi/joi-date'));
 
@@ -53,7 +53,8 @@ module.exports = {
             surname: Joi.string().optional(),
             email: Joi.string().min(5).max(255).optional().email(),
             password: Joi.string().min(5).max(1024).optional(),
-            phone: Joi.number().optional()
+            phone: Joi.number().optional(),
+            rule: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required()
         }),
 
         idSchema: Joi.object().keys({
