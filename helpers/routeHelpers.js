@@ -1,7 +1,4 @@
 const Joi = require('joi');
-// const Joi = require('@hapi/joi')
-//     .extend(require('@hapi/joi-date'));
-
 
 module.exports = {
     validateParam: (schema, name) => {
@@ -44,7 +41,6 @@ module.exports = {
             email: Joi.string().min(5).max(255).required().email(),
             password: Joi.string().min(5).max(1024).required(),
             phone: Joi.number().required(),
-            // rule: Joi.string().required()
             rule: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required()
         }),
 
@@ -77,12 +73,10 @@ module.exports = {
             customerName: Joi.string().required(),
             customerSurname: Joi.string().optional(),
             phone: Joi.number().required(),
-            isPaid: Joi.boolean().required(),
-            price: Joi.number().required(),
-            customerQuantity: Joi.number().required(),
             customerAge: Joi.string().required(),
-            date: Joi.date().required(),
-            hour: Joi.number().required(),
+            customerQuantity: Joi.number().required(),
+            date: Joi.string().required(),
+            hour: Joi.string().required(),
             instructor: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required()
         }),
 

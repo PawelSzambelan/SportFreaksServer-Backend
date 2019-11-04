@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const Customer = require('../models/customer');
 const Lesson = require('../models/lesson');
 const Rule = require('../models/rule');
 const JWT = require('jsonwebtoken');
@@ -33,16 +34,6 @@ module.exports = {
     //     res.status(200).json(user);
     // },
 
-    replaceUser: async (req, res, next) => {
-        // enforce that req.body must contain all the fields
-        const {userId} = req.value.params;
-        const newUser = req.value.body;
-        const result = await User.findByIdAndUpdate(userId, newUser);
-        res.status(200).json({success: true});
-    },
-
-
-
     // getUserLessons: async (req, res, next) => {
     //     const {userId} = req.value.params;
     //     const user = await User.findById(userId).populate('lessons');
@@ -66,46 +57,6 @@ module.exports = {
         await user.save();
         res.status(201).json(newLesson);
     },
-
-    // signUp: async (req, res, next) => {
-    //     const {name, surname, email, password, phone, rule} = req.value.body;
-    //     console.log(req.value.body);
-    //
-    //     //Check if there is a user with the same email
-    //     const foundUser = await User.findOne({email});
-    //     if (foundUser) {
-    //         return res.status(403).json({error: 'Email is already in use'});
-    //     }
-    //
-    //     // Create a new user
-    //     const newUser = new User({name, surname, email, password, phone, rule});
-    //     // const salt = await bcrypt.genSalt(10);
-    //     // newUser.password = await bcrypt.hash(newUser.password, salt);
-    //     await newUser.save();
-    //
-    //     //create a token
-    //     const token = signToken(newUser);
-    //
-    //     // res.status(200).json({newUser});
-    //     res.status(200).json({token});
-    // },
-    //
-    // signIn: async (req, res, next) => {
-    //     console.log('I managed to get /signIn route');
-    //     // generate token
-    //     const token = signToken(req.user);
-    //     const userRule = await Rule.findById(req.user.rule);
-    //     console.log('userRule id', req.user.rule);
-    //     console.log('user rule name', userRule.name);
-    //     const userRuleName = userRule.name;
-    //     res.status(200).json({token, userRuleName});
-    // },
-    //
-    // secret: async (req, res, next) => {
-    //     console.log('I managed to get /secret route');
-    //     res.json({secret: "resource"});
-    // },
-
 
 
     // z tych niżej korzystam
@@ -144,9 +95,22 @@ module.exports = {
     updateUser: async (req, res, next) => {
         const {userId} = req.value.params;
         const newUser = req.value.body;
-        const salt = await bcrypt.genSalt(10);
-        newUser.password = await bcrypt.hash(newUser.password, salt);
+        // if user changed password then hash it again, but if not then do not hash it
+        if (!(newUser.password.length >= 40)) {
+            const salt = await bcrypt.genSalt(10);
+            newUser.password = await bcrypt.hash(newUser.password, salt);
+        }
         await User.findByIdAndUpdate(userId, newUser);
+        res.status(200).json({success: true});
+    },
+
+    deleteUser: async (req, res, next) => {
+        const {userId} = req.value.params;
+        const user = await User.findById(userId);
+        for( lessonId of user.lessons) {
+            await Lesson.findByIdAndDelete(lessonId);
+        }
+        await User.findByIdAndDelete(userId);
         res.status(200).json({success: true});
     },
 
@@ -162,21 +126,18 @@ module.exports = {
 
     getUserLessons: async (req, res, next) => {
         const id = req.header('auth-token');
-        // console.log('req.path: ', req.path);
         const date = req.path.substring(13);
-        // console.log('date from req.path: ', date);
         const userLessons = await User.findById(id).populate('lessons');
-        // console.log('user all lessons', userLessons.lessons);
 
         const filteredLessonsByDate = userLessons.lessons.filter(function (lessons) {
-            // console.log('date from req.path: ', date);
-            // console.log('date from req.path: ', lessons.date);
-            // console.log(date == lessons.date);
             return lessons.date == date;
         });
-        // console.log('filteredLessonsByDate: ', filteredLessonsByDate);
-        // res.status(200).json(userLessons.lessons);
         res.status(200).json(filteredLessonsByDate);
+    },
+
+    getCustomers: async (req, res, next) => {
+        const customers = await Customer.find({});
+        res.status(200).json(customers);
     },
 
     getInstructors: async (req, res, next) => {
@@ -191,7 +152,6 @@ module.exports = {
             // return user.rule == instructorRule.id;
             return user.rule == '5da733b3c3a29f3440edb8b9';
         });
-        // console.log('instructors only: ', instructors);
         res.status(200).json(instructors);
     },
 

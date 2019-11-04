@@ -1,4 +1,3 @@
-const express = require('express');
 const router = require('express-promise-router')();
 
 const UsersController = require('../controllers/users');
@@ -6,14 +5,6 @@ const {validateParam, validateBody, schemas} = require('../helpers/routeHelpers.
 
 router.route('/')
     .get(UsersController.index);
-    // .post(validateBody(schemas.userSchema), UsersController.newUser);
-
-// router.route('/:userId')
-//     .get(validateParam(schemas.idSchema, 'userId'), UsersController.getUser)
-//     .put([validateParam(schemas.idSchema, 'userId'), validateBody(schemas.userSchema)], UsersController.replaceUser)
-//     .patch([validateParam(schemas.idSchema, 'userId'), validateBody(schemas.userOptionalSchema)], UsersController.updateUser);
-// .delete();
-
 
 
 router.route('/:userId/lessons')
@@ -33,6 +24,9 @@ router.route('/signin')
 router.route('/updateUser/:userId')
     .put([validateParam(schemas.idSchema, 'userId'), validateBody(schemas.userOptionalSchema)], UsersController.updateUser);
 
+router.route('/deleteUser/:userId')
+    .delete(validateParam(schemas.idSchema, 'userId'), UsersController.deleteUser);
+
 //to mi zwracało wszystkie lekcje danego instruktora a niżej chciałem zrobić, żeby z danego dnia ;)
 // router.route('/userLessons/')
 //     .get(UsersController.getUserLessons);
@@ -42,6 +36,9 @@ router.route('/userLessons/:date')
 
 router.route('/instructors')
     .get(UsersController.getInstructors);
+
+router.route('/customers')
+    .get(UsersController.getCustomers);
 
 router.route('/receptionists')
     .get(UsersController.getReceptionists);
