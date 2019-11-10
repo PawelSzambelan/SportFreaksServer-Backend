@@ -67,35 +67,33 @@ module.exports = {
         res.status(200).json(lesson);
     },
 
+    deleteLesson: async (req, res, next) => {
+        const {lessonId} = req.value.params;
+        console.log('lessonId', lessonId);
+        const lesson = await Lesson.findById(lessonId);
+        if (!lesson) {
+            return res.status(404).json({error: 'Lesson doesn\'t exist'});
+        }
+        const instructorId = lesson.instructor;
+        const instructor = await User.findById(instructorId);
+        console.log('instructor', instructor);
 
 
-
-
-
-
-
-
-    newLesson: async (req, res, next) => {
-        console.log('req.value', req.value);
-
-        // find actual instructor
-        const instructor = await User.findById(req.value.body.instructor);
-
-        // create a new lesson
-        const newLesson = req.body;
-        delete newLesson.instructor;
-
-        const lesson = new Lesson(newLesson);
-        lesson.instructor = instructor;
-        await lesson.save();
-
-        // add this new lesson to instructor
-        instructor.lessons.push(lesson);
+        await lesson.remove();
+        //remove the lesson from instructor's lessons array
+        instructor.lessons.pull(lessonId);
         await instructor.save();
-
-        // done
-        res.status(200).json(lesson);
+        res.status(200).json({success: true});
     },
+
+
+
+
+
+
+
+
+
 
     getLesson: async (req, res, next) => {
         const lesson = await Lesson.findById(req.value.params.lessonId);
@@ -116,29 +114,7 @@ module.exports = {
         res.status(200).json({success: true});
     },
 
-    deleteLesson: async (req, res, next) => {
-        const {lessonId} = req.value.params;
 
-        //get lesson
-        const lesson = await Lesson.findById(lessonId);
-
-        if (!lesson) {
-            return res.status(404).json({error: 'Lesson doesn\'t exist'});
-        }
-        const instructorId = lesson.instructor;
-
-        //get instructor
-        const instructor = await User.findById(instructorId);
-
-        //remove an instructor
-        await lesson.remove();
-
-        //remove the lesson from instructor's lessons array
-        instructor.lessons.pull(lesson);
-        await instructor.save();
-
-        res.status(200).json({success: true});
-    },
 
 
 };

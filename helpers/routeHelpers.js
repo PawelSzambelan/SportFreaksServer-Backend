@@ -80,31 +80,39 @@ module.exports = {
             instructor: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required()
         }),
 
-        putLessonSchema: Joi.object().keys({
-            customerName: Joi.string().required(),
-            customerSurname: Joi.string().optional(),
-            phone: Joi.number().required(),
-            isPaid: Joi.boolean().required(),
-            price: Joi.number().required(),
+        deleteLessonSchema: Joi.object().keys({
+            customer: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required(),
             customerQuantity: Joi.number().required(),
-            customerAge: Joi.string().required(),
-            date: Joi.date().required(),
-            hour: Joi.number().required(),
+            date: Joi.string().required(),
+            hour: Joi.string().required(),
             instructor: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required()
         }),
 
-        patchLessonSchema: Joi.object().keys({
-            customerName: Joi.string(),
-            customerSurname: Joi.string().optional(),
-            phone: Joi.number(),
-            isPaid: Joi.boolean(),
-            price: Joi.number(),
-            customerQuantity: Joi.number(),
-            customerAge: Joi.string(),
-            date: Joi.date(),
-            hour: Joi.number(),
-            instructor: Joi.string().regex(/^[0-9a-fA-F]{24}$/)
-        }),
+        // putLessonSchema: Joi.object().keys({
+        //     customerName: Joi.string().required(),
+        //     customerSurname: Joi.string().optional(),
+        //     phone: Joi.number().required(),
+        //     isPaid: Joi.boolean().required(),
+        //     price: Joi.number().required(),
+        //     customerQuantity: Joi.number().required(),
+        //     customerAge: Joi.string().required(),
+        //     date: Joi.date().required(),
+        //     hour: Joi.number().required(),
+        //     instructor: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required()
+        // }),
+        //
+        // patchLessonSchema: Joi.object().keys({
+        //     customerName: Joi.string(),
+        //     customerSurname: Joi.string().optional(),
+        //     phone: Joi.number(),
+        //     isPaid: Joi.boolean(),
+        //     price: Joi.number(),
+        //     customerQuantity: Joi.number(),
+        //     customerAge: Joi.string(),
+        //     date: Joi.date(),
+        //     hour: Joi.number(),
+        //     instructor: Joi.string().regex(/^[0-9a-fA-F]{24}$/)
+        // }),
 
         authSchema: Joi.object().keys({
             email: Joi.string().email().required(),

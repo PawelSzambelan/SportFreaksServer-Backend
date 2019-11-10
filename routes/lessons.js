@@ -5,8 +5,8 @@ const LessonsController = require('../controllers/lessons');
 const { validateParam, validateBody, schemas } = require('../helpers/routeHelpers.js');
 
 router.route('/')
-    .get(LessonsController.index)
-    .post(validateBody(schemas.lessonSchema),LessonsController.newLesson);
+    .get(LessonsController.index);
+    // .post(validateBody(schemas.lessonSchema),LessonsController.newLesson);
 
 // router.route('/:lessonId')
 //     .get(validateParam(schemas.idSchema, 'lessonId'), LessonsController.getLesson)
@@ -23,5 +23,8 @@ router.route('/:date')
 
 router.route('/addLesson')
     .post(validateBody(schemas.lessonSchema), LessonsController.addLesson);
+
+router.route('/deleteLesson/:lessonId')
+    .delete(validateParam(schemas.idSchema, 'lessonId'), LessonsController.deleteLesson);
 
 module.exports = router;
